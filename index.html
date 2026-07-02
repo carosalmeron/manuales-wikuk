@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Manuales · CRM Grupo Consolidado</title>
+<style>
+  :root{
+    --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,'SF Mono',Menlo,Monaco,'Courier New',monospace;
+    --tinta:#15181d; --papel:#eef1f4; --azul:#1f5fa8; --azul2:#2b7fd4;
+    --rojo:#c62f2f; --ambar:#c2660c; --verde:#2f7d52; --linea:#c9d2dc; --humo:#5f6a76;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{font-family:var(--sans);background:var(--tinta);color:var(--tinta);-webkit-font-smoothing:antialiased;min-height:100dvh}
+  .wrap{max-width:480px;margin:0 auto;background:var(--papel);min-height:100dvh;position:relative}
+  .wrap::before{content:"";position:fixed;inset:0;max-width:480px;margin:0 auto;pointer-events:none;z-index:0;background-image:radial-gradient(var(--linea) 0.5px,transparent 0.5px);background-size:15px 15px;opacity:.4}
+  .inner{position:relative;z-index:1;padding:26px 22px calc(30px + env(safe-area-inset-bottom))}
+
+  .head{border-bottom:1.5px solid var(--tinta);padding-bottom:18px;margin-bottom:22px}
+  .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;color:var(--azul);text-transform:uppercase;margin-bottom:8px}
+  h1{font-weight:900;font-size:32px;line-height:1;letter-spacing:-.03em;text-transform:uppercase}
+  h1 em{font-style:normal;color:var(--azul);display:block}
+  .sub{font-size:14px;line-height:1.5;color:#333a42;margin-top:12px}
+
+  .sec{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--humo);margin:24px 0 10px}
+
+  a.card{display:flex;align-items:center;gap:14px;text-decoration:none;color:inherit;background:#fff;border:1.5px solid var(--tinta);border-radius:9px;padding:14px 15px;margin-bottom:10px;box-shadow:3px 3px 0 rgba(21,24,29,.08);transition:transform .12s ease,box-shadow .12s ease}
+  a.card:active{transform:translate(2px,2px);box-shadow:1px 1px 0 rgba(21,24,29,.08)}
+  .card .ic{flex:none;width:44px;height:44px;border-radius:10px;display:grid;place-items:center;font-size:22px;background:#e8f1fb;border:1.5px solid #b8d3f0}
+  .card .body{flex:1;min-width:0}
+  .card .ct{font-weight:800;font-size:15px;line-height:1.15}
+  .card .cx{font-size:12px;color:var(--humo);margin-top:3px;line-height:1.35}
+  .card .go{flex:none;color:var(--azul);font-size:20px;font-weight:700}
+  .card .badge{font-family:var(--mono);font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;padding:3px 7px;border-radius:3px;background:var(--verde);color:#fff;margin-top:6px;display:inline-block}
+
+  .soon{opacity:.6}
+  .soon .ic{background:#eef1f4;border-color:var(--linea)}
+  .soon .go{color:var(--humo)}
+  .soon .badge{background:var(--humo)}
+
+  .foot{margin-top:26px;padding-top:16px;border-top:1px dashed var(--linea);font-size:11px;color:var(--humo);line-height:1.5}
+  .foot b{color:var(--tinta)}
+</style>
+</head>
+<body>
+<div class="wrap"><div class="inner">
+  <div class="head">
+    <div class="k">Grupo Consolidado · WIKUK + INTERKEY</div>
+    <h1>Manuales<em>del CRM</em></h1>
+    <div class="sub">Guías rápidas de cada módulo. Toca una para abrirla — se lee en el móvil, paso a paso.</div>
+  </div>
+
+  <div class="sec">Disponibles</div>
+
+  <a class="card" href="./planificacion/">
+    <div class="ic">📋</div>
+    <div class="body">
+      <div class="ct">Planificación de compras</div>
+      <div class="cx">Cómo registrar una planificación en la visita y cómo la ve Compras.</div>
+      <span class="badge">Listo · 10 pasos</span>
+    </div>
+    <div class="go">›</div>
+  </a>
+
+  <div class="sec">Próximamente</div>
+
+  <div class="card soon">
+    <div class="ic">💰</div>
+    <div class="body">
+      <div class="ct">Ofertas y cotizaciones</div>
+      <div class="cx">Crear ofertas, descuentos por rol y aprobaciones.</div>
+      <span class="badge">En preparación</span>
+    </div>
+    <div class="go">·</div>
+  </div>
+
+  <div class="card soon">
+    <div class="ic">👋</div>
+    <div class="body">
+      <div class="ct">Visitas e instrucciones</div>
+      <div class="cx">Registrar visitas y el hilo de instrucciones al comercial.</div>
+      <span class="badge">En preparación</span>
+    </div>
+    <div class="go">·</div>
+  </div>
+
+  <div class="card soon">
+    <div class="ic">🎯</div>
+    <div class="body">
+      <div class="ct">Estrategias de precio</div>
+      <div class="cx">Cuándo se pide estrategia y la cadena de aprobación.</div>
+      <span class="badge">En preparación</span>
+    </div>
+    <div class="go">·</div>
+  </div>
+
+  <div class="card soon">
+    <div class="ic">📦</div>
+    <div class="body">
+      <div class="ct">Muestras</div>
+      <div class="cx">Enviar muestras y seguir su resultado.</div>
+      <span class="badge">En preparación</span>
+    </div>
+    <div class="go">·</div>
+  </div>
+
+  <div class="foot">
+    Para añadir un manual nuevo: crea una carpeta dentro de <b>/manuales</b> con su <b>index.html</b> y añade aquí una tarjeta que apunte a ella. <br>Ej: <b>/manuales/ofertas/</b> → enlace <b>./ofertas/</b>
+  </div>
+</div></div>
+</body>
+</html>
