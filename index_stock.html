@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Ver stock en el catálogo · Manual</title>
+<style>
+  :root{
+    --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,'SF Mono',Menlo,Monaco,'Courier New',monospace;
+    --tinta:#15181d; --papel:#eef1f4; --azul:#1f5fa8; --azul2:#2b7fd4;
+    --rojo:#c62f2f; --ambar:#c2660c; --verde:#2f7d52; --linea:#c9d2dc; --humo:#5f6a76;
+    /* colores reales de la app para las reproducciones */
+    --stk-verde:#166534; --stk-ambar:#d97706; --stk-azul:#2563eb; --stk-gris:#8a8078;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{font-family:var(--sans);background:var(--tinta);color:var(--tinta);-webkit-font-smoothing:antialiased;min-height:100dvh}
+  .wrap{max-width:480px;margin:0 auto;background:var(--papel);min-height:100dvh;position:relative}
+  .wrap::before{content:"";position:fixed;inset:0;max-width:480px;margin:0 auto;pointer-events:none;z-index:0;background-image:radial-gradient(var(--linea) 0.5px,transparent 0.5px);background-size:15px 15px;opacity:.4}
+  .inner{position:relative;z-index:1;padding:26px 22px calc(34px + env(safe-area-inset-bottom))}
+
+  .back{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--azul);text-decoration:none;margin-bottom:18px}
+  .back:active{opacity:.6}
+
+  .head{border-bottom:1.5px solid var(--tinta);padding-bottom:18px;margin-bottom:8px}
+  .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;color:var(--azul);text-transform:uppercase;margin-bottom:8px}
+  h1{font-weight:900;font-size:30px;line-height:1;letter-spacing:-.03em;text-transform:uppercase}
+  h1 em{font-style:normal;color:var(--azul);display:block}
+  .sub{font-size:14px;line-height:1.55;color:#333a42;margin-top:12px}
+  .who{display:flex;gap:8px;align-items:flex-start;margin-top:14px;background:#e8f1fb;border:1.5px solid #b8d3f0;border-radius:8px;padding:10px 12px;font-size:12.5px;line-height:1.45;color:#1c3f66}
+  .who b{color:var(--tinta)}
+
+  .step{margin-top:26px}
+  .step-k{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--humo);display:flex;align-items:center;gap:8px;margin-bottom:9px}
+  .step-n{font-weight:800;color:#fff;background:var(--azul);border-radius:4px;padding:2px 7px;font-size:10px;letter-spacing:.06em}
+  .step h2{font-size:18px;font-weight:900;letter-spacing:-.01em;line-height:1.15;margin-bottom:8px}
+  .step p{font-size:13.5px;line-height:1.6;color:#2b333c}
+  .step p+p{margin-top:9px}
+  .tip{margin-top:10px;font-size:12.5px;line-height:1.5;color:#1c3f66;background:#e8f1fb;border-left:3px solid var(--azul);border-radius:0 6px 6px 0;padding:9px 12px}
+  .tip b{color:var(--tinta)}
+
+  /* Marco "pantalla de la app" para las reproducciones */
+  .device{background:#fff;border:1.5px solid var(--tinta);border-radius:11px;box-shadow:3px 3px 0 rgba(21,24,29,.08);padding:14px;margin:13px 0}
+  .device-cap{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--humo);margin-bottom:11px;display:flex;align-items:center;gap:6px}
+  .device-cap::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--verde)}
+
+  /* Chips reales */
+  .chips{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .chip{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:999px;font-size:12.5px;font-weight:800;line-height:1}
+  .chip.ok{background:#e7f3ea;color:var(--stk-verde);border:1px solid #bfe0c8}
+  .chip.no{background:#f1efeb;color:var(--stk-gris);border:1px solid #e0dad1}
+  .chip.in{background:#e7eef9;color:var(--stk-azul);border:1px solid #c3d6f0}
+  .chip-note{font-size:11.5px;color:var(--humo);margin-top:9px;line-height:1.45}
+
+  /* Tabla de envases real */
+  .stkhdr{font-weight:900;font-size:13px;color:var(--tinta);margin-bottom:2px}
+  .stkdate{font-size:10.5px;color:var(--humo);font-family:var(--mono);letter-spacing:.04em;margin-bottom:9px}
+  .grid{display:grid;grid-template-columns:1.25fr .7fr .7fr .7fr .8fr;gap:6px;align-items:center}
+  .grid.h{font-size:9.5px;color:var(--humo);font-weight:800;text-transform:uppercase;letter-spacing:.03em;padding:5px 0;border-bottom:2px solid var(--linea)}
+  .grid.r{font-size:12.5px;padding:7px 0;border-bottom:1px solid #eef0f2}
+  .grid .rt{text-align:right;font-variant-numeric:tabular-nums}
+  .grid.tot{font-size:13px;font-weight:900;padding:9px 0 2px;border-top:2px solid var(--linea)}
+  .cod{color:#3a424c;word-break:break-all}
+  .v-stk{font-weight:800;color:var(--stk-verde)}
+  .v-in{color:var(--stk-azul)}
+  .v-comp{color:var(--stk-ambar)}
+  .v-disp{font-weight:800;color:var(--stk-verde)}
+  .v-mut{color:#c2bcb2}
+
+  /* Leyenda de columnas */
+  .leg{list-style:none;margin:4px 0 0;padding:0}
+  .leg li{display:flex;gap:10px;padding:9px 0;border-bottom:1px dashed var(--linea);font-size:13px;line-height:1.4}
+  .leg li:last-child{border-bottom:none}
+  .leg .tag{flex:none;font-family:var(--mono);font-size:10px;font-weight:800;letter-spacing:.04em;padding:3px 7px;border-radius:4px;height:max-content;color:#fff}
+  .leg .b{color:var(--tinta);font-weight:800}
+  .tag-stk{background:var(--stk-verde)} .tag-in{background:var(--stk-azul)}
+  .tag-comp{background:var(--stk-ambar)} .tag-disp{background:#0f7a44}
+
+  /* Bloque "cómo actualizar" */
+  .do{background:#fff;border:1.5px solid var(--tinta);border-radius:9px;box-shadow:3px 3px 0 rgba(21,24,29,.08);padding:14px 15px;margin-top:13px}
+  .do ol{margin:0;padding-left:20px}
+  .do li{font-size:13.5px;line-height:1.55;margin-bottom:7px;color:#2b333c}
+  .do li:last-child{margin-bottom:0}
+  .do b{color:var(--tinta)}
+  .ok-toast{display:inline-flex;align-items:center;gap:5px;background:#1d2530;color:#fff;font-size:11.5px;font-weight:700;padding:5px 10px;border-radius:8px;margin-top:2px}
+
+  .foot{margin-top:28px;padding-top:16px;border-top:1px dashed var(--linea);font-size:11.5px;color:var(--humo);line-height:1.6}
+  .foot b{color:var(--tinta)}
+</style>
+</head>
+<body>
+<div class="wrap"><div class="inner">
+
+  <a class="back" href="index.html">‹ Manuales</a>
+
+  <div class="head">
+    <div class="k">Grupo Consolidado · WIKUK + INTERKEY</div>
+    <h1>Ver stock<em>en el catálogo</em></h1>
+    <div class="sub">Los jefes pueden consultar el stock de SAP sin salir del catálogo: el total por producto y el detalle por envase. Este es el recorrido completo.</div>
+    <div class="who">🔒&nbsp;<div>Solo lo ven <b>CEO, jefes de ventas y administración</b>. Un comercial que abra el catálogo normal no ve nada de esto.</div></div>
+  </div>
+
+  <!-- PASO 1 -->
+  <div class="step">
+    <div class="step-k"><span class="step-n">01</span> Cómo entrar</div>
+    <h2>Abre el catálogo desde el Hub</h2>
+    <p>Entra al catálogo con tu usuario desde el Hub. Si eres jefe, el stock aparece solo, sin activar nada. No hace falta ningún botón extra.</p>
+  </div>
+
+  <!-- PASO 2 -->
+  <div class="step">
+    <div class="step-k"><span class="step-n">02</span> El indicador</div>
+    <h2>La etiqueta de stock</h2>
+    <p>Junto a cada producto verás una etiqueta con su situación:</p>
+    <div class="device">
+      <div class="device-cap">Así se ve en el catálogo</div>
+      <div class="chips">
+        <span class="chip ok">📦 5.824 ▾</span>
+        <span class="chip no">Sin stock ▾</span>
+        <span class="chip in">+279</span>
+      </div>
+      <div class="chip-note">Verde = stock total · Gris = sin existencias · Azul <b>+N</b> = entradas ya previstas · La flecha <b>▾</b> avisa de que hay desglose.</div>
+    </div>
+    <div class="tip">En las tripas, ese total <b>suma todos los envases</b> del producto (BG, C12, N32, N55…), no un solo formato.</div>
+  </div>
+
+  <!-- PASO 3 -->
+  <div class="step">
+    <div class="step-k"><span class="step-n">03</span> El detalle</div>
+    <h2>Toca el producto para ver los envases</h2>
+    <p>Al tocar el producto se abre su ficha. Arriba del todo aparece el bloque <b>Stock por envase</b>:</p>
+    <div class="device">
+      <div class="device-cap">Ficha del producto · parte superior</div>
+      <div class="stkhdr">📦 Stock por envase</div>
+      <div class="stkdate">C5.8R · SAP a 06/07/2026</div>
+      <div class="grid h">
+        <span>Envase</span><span class="rt">Stock</span><span class="rt">Entr.</span><span class="rt">Comp.</span><span class="rt">Disp.</span>
+      </div>
+      <div class="grid r">
+        <span class="cod">C5.8R.BG</span><span class="rt v-stk">4.314</span><span class="rt v-in">+279</span><span class="rt v-comp">279</span><span class="rt v-disp">4.035</span>
+      </div>
+      <div class="grid r">
+        <span class="cod">C5.8R.C12</span><span class="rt v-stk">704</span><span class="rt v-mut">·</span><span class="rt v-mut">·</span><span class="rt v-disp">704</span>
+      </div>
+      <div class="grid r">
+        <span class="cod">C5.8R.N55</span><span class="rt v-stk">300</span><span class="rt v-mut">·</span><span class="rt v-comp">75</span><span class="rt v-disp">225</span>
+      </div>
+      <div class="grid r">
+        <span class="cod">C5.8R · base</span><span class="rt v-stk">213</span><span class="rt v-mut">·</span><span class="rt v-mut">·</span><span class="rt v-disp">213</span>
+      </div>
+      <div class="grid tot">
+        <span>TOTAL</span><span class="rt v-stk">5.824</span><span class="rt v-in">+279</span><span class="rt v-comp">396</span><span class="rt v-disp">5.428</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PASO 4 -->
+  <div class="step">
+    <div class="step-k"><span class="step-n">04</span> Qué significa</div>
+    <h2>Las cuatro columnas</h2>
+    <ul class="leg">
+      <li><span class="tag tag-stk">STOCK</span><div><span class="b">Existencias ahora</span> en almacén, en unidades.</div></li>
+      <li><span class="tag tag-in">ENTR.</span><div><span class="b">Entradas previstas:</span> unidades que ya están de camino o pedidas.</div></li>
+      <li><span class="tag tag-comp">COMP.</span><div><span class="b">Comprometido:</span> unidades ya reservadas o vendidas pendientes de salir.</div></li>
+      <li><span class="tag tag-disp">DISP.</span><div><span class="b">Disponible</span> = Stock − Comprometido. Es lo que queda libre para vender.</div></li>
+    </ul>
+  </div>
+
+  <!-- PASO 5 -->
+  <div class="step">
+    <div class="step-k"><span class="step-n">05</span> Y los precios</div>
+    <h2>Debajo del stock, los precios</h2>
+    <p>En la misma ficha, bajo el stock, están los precios. Salen recogidos: toca la línea del <b>precio</b> para desplegar los descuentos (−1%, −2%…) y vuelve a tocarla para ocultarlos.</p>
+  </div>
+
+  <!-- PASO 6 -->
+  <div class="step">
+    <div class="step-k"><span class="step-n">06</span> Mantenerlo al día</div>
+    <h2>De dónde salen los datos</h2>
+    <p>El stock viene del Excel de SAP. Se guarda una vez y lo ve todo el mundo en el catálogo. Para actualizarlo:</p>
+    <div class="do">
+      <ol>
+        <li>Abre <b>Stock SAP</b> desde el Hub.</li>
+        <li>Pulsa <b>Actualizar datos</b> y elige el Excel.</li>
+        <li>Espera al aviso <span class="ok-toast">☁️ Guardado en Firebase</span></li>
+        <li>Listo: el catálogo ya muestra los datos nuevos para todos.</li>
+      </ol>
+    </div>
+    <p>Mientras no se suba un Excel nuevo, el catálogo mantiene el último guardado.</p>
+  </div>
+
+  <div class="foot">
+    <b>Si un producto no muestra stock</b>, es que su código no está en el Excel de SAP (por ejemplo, especias o envases con códigos distintos). <br><br><b>Comprometido y entradas</b> solo aparecen si el Excel los trae; si vienen vacíos, se muestran como “·” y el disponible es igual al stock.
+  </div>
+
+</div></div>
+</body>
+</html>
