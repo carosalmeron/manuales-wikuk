@@ -1,1 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Desarrollo de producto · Manuales CRM</title>
+<style>
+  :root{
+    --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,'SF Mono',Menlo,Monaco,'Courier New',monospace;
+    --tinta:#15181d; --papel:#eef1f4; --azul:#1f5fa8; --azul2:#2b7fd4;
+    --rojo:#c62f2f; --ambar:#c2660c; --verde:#2f7d52; --morado:#6d28d9; --linea:#c9d2dc; --humo:#5f6a76;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{font-family:var(--sans);background:var(--tinta);color:var(--tinta);-webkit-font-smoothing:antialiased;min-height:100dvh}
+  .wrap{max-width:480px;margin:0 auto;background:var(--papel);min-height:100dvh;position:relative}
+  .wrap::before{content:"";position:fixed;inset:0;max-width:480px;margin:0 auto;pointer-events:none;z-index:0;background-image:radial-gradient(var(--linea) 0.5px,transparent 0.5px);background-size:15px 15px;opacity:.4}
+  .inner{position:relative;z-index:1;padding:26px 22px calc(30px + env(safe-area-inset-bottom))}
 
+  a.volver{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--azul);text-decoration:none;display:inline-block;margin-bottom:16px}
+
+  .head{border-bottom:1.5px solid var(--tinta);padding-bottom:18px;margin-bottom:8px}
+  .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;color:var(--morado);text-transform:uppercase;margin-bottom:8px}
+  h1{font-weight:900;font-size:32px;line-height:1;letter-spacing:-.03em;text-transform:uppercase}
+  h1 em{font-style:normal;color:var(--morado);display:block}
+  .sub{font-size:14px;line-height:1.5;color:#333a42;margin-top:12px}
+
+  /* Las 3 preguntas */
+  .tres{display:flex;gap:8px;margin:18px 0 8px}
+  .tres .b{flex:1;background:#fff;border:1.5px solid var(--tinta);border-radius:9px;padding:11px 8px;text-align:center;box-shadow:3px 3px 0 rgba(21,24,29,.08)}
+  .tres .q{font-size:15px}
+  .tres .t{font-family:var(--mono);font-size:8px;letter-spacing:.06em;text-transform:uppercase;color:var(--humo);margin-top:5px;line-height:1.45}
+
+  .sec{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--humo);margin:26px 0 10px}
+
+  .paso{background:#fff;border:1.5px solid var(--tinta);border-radius:9px;padding:15px;margin-bottom:12px;box-shadow:3px 3px 0 rgba(21,24,29,.08)}
+  .pnum{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+  .pnum .n{flex:none;width:26px;height:26px;border-radius:7px;background:var(--tinta);color:#fff;display:grid;place-items:center;font-weight:900;font-size:13px}
+  .pnum .t{font-weight:800;font-size:15px;line-height:1.15}
+  .paso p{font-size:13px;line-height:1.55;color:#333a42}
+  .paso p+p{margin-top:8px}
+  .paso b{color:var(--tinta)}
+  .paso .ui{font-family:var(--mono);font-size:11px;background:#f0eaff;border:1px solid #d4c5f5;border-radius:4px;padding:1px 6px;white-space:nowrap}
+  .paso .rojo{color:var(--rojo);font-weight:700}
+  .paso .verde{color:var(--verde);font-weight:700}
+  .paso .ambar{color:var(--ambar);font-weight:700}
+  .paso .morado{color:var(--morado);font-weight:700}
+
+  .nota{border-left:3px solid var(--morado);background:#f0eaff;border-radius:0 7px 7px 0;padding:10px 12px;font-size:12px;line-height:1.5;color:#3b2a63;margin-top:10px}
+  .alerta{border-left:3px solid var(--rojo);background:#fbeaea;border-radius:0 7px 7px 0;padding:10px 12px;font-size:12px;line-height:1.5;color:#6e2020;margin-top:10px}
+
+  /* Recorrido del embudo */
+  .funnel{background:#fff;border:1.5px dashed var(--linea);border-radius:8px;padding:14px;margin-top:10px}
+  .fstep{display:flex;gap:10px;align-items:flex-start;margin-bottom:2px}
+  .fstep .dot{flex:none;width:26px;height:26px;border-radius:8px;display:grid;place-items:center;font-size:12px;font-weight:900;color:#fff}
+  .fstep .fx{flex:1;padding-bottom:12px}
+  .fstep .ft{font-weight:800;font-size:13px}
+  .fstep .fd{font-size:11px;color:var(--humo);line-height:1.4;margin-top:2px}
+  .fline{width:2.5px;height:10px;background:var(--linea);margin-left:12px;margin-bottom:2px}
+  .fstep .quien{font-family:var(--mono);font-size:8.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--humo)}
+
+  table{width:100%;border-collapse:collapse;margin-top:10px;font-size:12px}
+  th{font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--humo);text-align:left;padding:6px 8px;border-bottom:1.5px solid var(--tinta)}
+  td{padding:8px;border-bottom:1px solid var(--linea);vertical-align:top;line-height:1.45}
+  td:first-child{white-space:nowrap;font-weight:700}
+
+  .regla{display:flex;gap:10px;align-items:flex-start;background:#fff;border:1.5px solid var(--tinta);border-radius:9px;padding:12px 14px;margin-bottom:8px;box-shadow:3px 3px 0 rgba(21,24,29,.08)}
+  .regla .ic{flex:none;font-size:18px}
+  .regla .tx{font-size:12.5px;line-height:1.45;color:#333a42}
+  .regla .tx b{color:var(--tinta)}
+
+  .foot{margin-top:26px;padding-top:16px;border-top:1px dashed var(--linea);font-size:11px;color:var(--humo);line-height:1.5}
+</style>
+</head>
+<body>
+<div class="wrap"><div class="inner">
+
+  <a class="volver" href="../">‹ Volver a manuales</a>
+
+  <div class="head">
+    <div class="k">Manual · Módulo Desarrollo</div>
+    <h1>Desarrollo<em>el embudo de innovación</em></h1>
+    <div class="sub">Cómo se pide, se evalúa y se aprueba un producto nuevo. Del "mi cliente quiere algo que no tenemos" a un proyecto de I+D con código de artículo — sin perder tiempo por el camino.</div>
+  </div>
+
+  <div class="tres">
+    <div class="b"><div class="q">📈</div><div class="t">¿El potencial<br>lo justifica?</div></div>
+    <div class="b"><div class="q">🔬</div><div class="t">¿Es viable<br>fabricarlo?</div></div>
+    <div class="b"><div class="q">💶</div><div class="t">¿Es<br>rentable?</div></div>
+  </div>
+
+  <!-- ═══════════ QUÉ ES ═══════════ -->
+  <div class="sec">01 · Qué es y por qué existe</div>
+
+  <div class="paso">
+    <div class="pnum"><div class="n">1</div><div class="t">Un embudo con puertas</div></div>
+    <p>Antes, un comercial pedía una muestra de un producto que no existe, I+D empezaba a trabajar sin saber si valía la pena, y a mitad de camino se descubría que no era viable, no era rentable o el cliente no lo iba a comprar en volumen. <b>Tiempo perdido de todos.</b></p>
+    <p>El embudo pone las tres preguntas <b>en orden y antes de gastar recursos</b>: cada idea pasa por puertas, y en cada puerta alguien con criterio decide si sigue o se para. Lo que muere, muere pronto y barato. Lo que avanza, avanza con firmas.</p>
+    <div class="nota"><b>La regla del sistema:</b> nada llega a I+D sin filtro comercial, nada se aprueba sin escandallo, y ninguna muestra se fabrica sin código de artículo. Sin excepciones — las excepciones son el lío que veníamos teniendo.</div>
+  </div>
+
+  <div class="paso">
+    <div class="pnum"><div class="n">2</div><div class="t">El recorrido completo</div></div>
+    <div class="funnel">
+      <div class="fstep"><div class="dot" style="background:#c2660c">1</div><div class="fx"><div class="ft">📨 Solicitud</div><div class="fd">Ficha completa del proyecto</div><div class="quien">Comercial</div></div></div>
+      <div class="fline"></div>
+      <div class="fstep"><div class="dot" style="background:#1f5fa8">2</div><div class="fx"><div class="ft">📈 Filtro comercial</div><div class="fd">¿El potencial lo justifica?</div><div class="quien">Director Comercial</div></div></div>
+      <div class="fline"></div>
+      <div class="fstep"><div class="dot" style="background:#2b7fd4">3</div><div class="fx"><div class="ft">🔬 Dictamen I+D</div><div class="fd">¿Viable? + escandallo €/ud</div><div class="quien">Responsable I+D</div></div></div>
+      <div class="fline"></div>
+      <div class="fstep"><div class="dot" style="background:#6d28d9">4</div><div class="fx"><div class="ft">✍️ Doble firma</div><div class="fd">¿Rentable? Decisión final</div><div class="quien">I+D + Dirección</div></div></div>
+      <div class="fline"></div>
+      <div class="fstep"><div class="dot" style="background:#c62f2f">5</div><div class="fx"><div class="ft">🔐 Código de artículo</div><div class="fd">Sin código no hay muestra</div><div class="quien">Calidad</div></div></div>
+      <div class="fline"></div>
+      <div class="fstep"><div class="dot" style="background:#2f7d52">✓</div><div class="fx"><div class="ft">🧪 Proyecto en marcha</div><div class="fd">Prototipo → muestra → cliente</div><div class="quien">I+D · con hitos y parte semanal</div></div></div>
+    </div>
+    <p style="margin-top:10px">Todo pasa en la pestaña <span class="ui">🧪 Desarrollo</span> del CRM. En cada paso, <b>los implicados reciben email automático</b> — nadie tiene que perseguir a nadie.</p>
+  </div>
+
+  <!-- ═══════════ COMERCIAL ═══════════ -->
+  <div class="sec">02 · Si eres comercial</div>
+
+  <div class="paso">
+    <div class="pnum"><div class="n">3</div><div class="t">La ficha: 5 minutos que abren la puerta</div></div>
+    <p>Toca <span class="ui">＋ Solicitud</span> y rellena la ficha. Los campos con * son obligatorios — <b>sin ficha completa no hay botón de enviar</b>:</p>
+    <table>
+      <tr><th>Campo</th><th>Qué poner</th></tr>
+      <tr><td>Nombre *</td><td>Referencia clara: "Burger vegetal calibre 90".</td></tr>
+      <tr><td>Cliente *</td><td>Quién lo pide — se busca en tu cartera.</td></tr>
+      <tr><td>Producto *</td><td>Qué es: formato, calibre, características, requisitos.</td></tr>
+      <tr><td>Sustituye a</td><td>Qué producto usa hoy el cliente, si lo hay.</td></tr>
+      <tr><td>Potencial *</td><td>Números, no adjetivos: "40.000 uds/mes · ~90.000 €/año · contrato 2 años".</td></tr>
+      <tr><td>PVP mercado *</td><td>Precio al que se vende hoy (+ rango si lo conoces). De aquí saldrá el margen.</td></tr>
+    </table>
+    <div class="alerta"><b>El potencial es tu argumento.</b> "El cliente está muy interesado" no pasa el filtro; "30.000 uds/mes desde enero, hoy se las compra a la competencia a 2,40 €" sí. Cuanto más concreto, más rápido avanza.</div>
+  </div>
+
+  <div class="paso">
+    <div class="pnum"><div class="n">4</div><div class="t">Después de enviar: lo ves todo</div></div>
+    <p>Tu solicitud aparece en tu embudo con su <b>etapa</b> (📨 Solicitado → 🔬 En I+D → ✍️ Decisión → resultado), los <b>días que lleva</b> y, cuando hay dictamen, el <b>margen calculado</b>.</p>
+    <p>Recibes <b>email en cada paso</b>: al pasar el filtro, al emitir I+D su dictamen, en la decisión final y cuando Calidad crea el código.</p>
+    <p>Si se rechaza, verás <b>el motivo escrito</b> de quien lo rechazó. No es un no porque sí — es información para afinar la próxima solicitud.</p>
+  </div>
+
+  <!-- ═══════════ LAS PUERTAS ═══════════ -->
+  <div class="sec">03 · Las puertas, una a una</div>
+
+  <div class="paso">
+    <div class="pnum"><div class="n">5</div><div class="t">Puerta 2 — Filtro del Director Comercial</div></div>
+    <p>Dirección revisa <b>solo la ficha</b> (5 minutos, sin gastar tiempo de I+D) y responde a la primera pregunta: <span class="ambar">¿el potencial justifica el esfuerzo?</span></p>
+    <p>· <b>Sí</b> → <span class="ui">✅ Pasa a I+D</span>, con aviso automático al responsable de I+D.<br>
+    · <b>No</b> → rechazo con motivo obligatorio, que el comercial recibe y lee.</p>
+    <div class="nota">Aquí muere lo que no merece la pena — <b>antes de costar una sola hora de laboratorio</b>. Es la puerta que protege el tiempo de I+D.</div>
+  </div>
+
+  <div class="paso">
+    <div class="pnum"><div class="n">6</div><div class="t">Puerta 3 — Dictamen de I+D</div></div>
+    <p>I+D recibe solo lo pre-filtrado y responde a la segunda pregunta: <span class="morado">¿es viable fabricarlo?</span></p>
+    <p>· <b>✅ Viable</b> o <b>🟡 Viable con condicionantes</b> + el <b>escandallo</b> (coste estimado €/ud) + observaciones (materias primas, proceso, recursos).<br>
+    · <b>❌ No viable</b> → rechazo directo con las observaciones como motivo.</p>
+    <p>En cuanto I+D teclea el escandallo, <b>el margen se calcula solo</b> contra el PVP de mercado de la ficha: € por unidad y % — a la vista de todos.</p>
+  </div>
+
+  <div class="paso">
+    <div class="pnum"><div class="n">7</div><div class="t">Puerta 4 — La doble firma</div></div>
+    <p>Tercera pregunta: <span class="verde">¿es rentable?</span> Con potencial, viabilidad y margen sobre la mesa, firman <b>los dos</b> — I+D y Dirección — como en la ficha de papel, pero con registro digital de quién y cuándo:</p>
+    <p>· <b>✍️ Aprobar</b> · <b>🟡 Con condiciones</b> (escribiendo cuáles) · <b>❌ Rechazar</b> (con motivo).</p>
+    <p>Con las dos firmas, el resultado queda sellado: <b>APROBADO</b>, <b>APROBADO CON CONDICIONES</b> o <b>NO APROBADO</b>. Una sola firma no aprueba nada.</p>
+  </div>
+
+  <div class="paso">
+    <div class="pnum"><div class="n">8</div><div class="t">Puerta 5 — El código de Calidad</div></div>
+    <p>Al aprobarse, <b>Calidad recibe email automático con las características del producto</b> y un encargo: crear el artículo.</p>
+    <p>Hasta que Calidad registre el código en el CRM, el desarrollo aparece así:</p>
+    <p style="background:#fbeaea;border-radius:8px;padding:9px 12px;font-weight:700;color:#c62f2f;font-size:12.5px">⛔ Proceso de muestra BLOQUEADO — pendiente de código de Calidad</p>
+    <p><b>Nadie fabrica una muestra sin código de artículo.</b> Cuando Calidad lo registra (<span class="ui">🔓 Registrar</span>), el bloqueo se levanta, el hito del proyecto se marca solo, y comercial, I+D y Dirección reciben el aviso de que ya se puede avanzar.</p>
+  </div>
+
+  <!-- ═══════════ DESPUÉS ═══════════ -->
+  <div class="sec">04 · Y una vez aprobado</div>
+
+  <div class="paso">
+    <div class="pnum"><div class="n">9</div><div class="t">El proyecto se crea solo</div></div>
+    <p>Nada aprobado se queda en un cajón: el CRM crea automáticamente el <b>proyecto de I+D</b> en la pestaña Proyectos, con sus hitos en orden:</p>
+    <p>🔐 Código de artículo (Calidad) → Prototipo / primera muestra interna → Muestra enviada al cliente → Feedback del cliente → Escandallo definitivo validado → Escalado industrial.</p>
+    <p>Esos hitos cuentan en el <b>parte semanal</b> de sus responsables, y cualquier ficha se puede sacar en <b>📄 PDF imprimible</b> con el formato oficial: identificación, evaluación, escandallo, margen, firmas con fecha y resultado. Para el archivo o para enseñar al cliente.</p>
+  </div>
+
+  <!-- ═══════════ REGLAS ═══════════ -->
+  <div class="sec">05 · Las reglas de oro</div>
+
+  <div class="regla"><div class="ic">📋</div><div class="tx"><b>Sin ficha no hay evaluación.</b> Los 5 minutos del comercial rellenándola ahorran días de todos los demás.</div></div>
+  <div class="regla"><div class="ic">🚪</div><div class="tx"><b>Nadie salta puertas.</b> Ni "es para un cliente importante" ni "es urgente" — el embudo es rápido precisamente porque es igual para todos.</div></div>
+  <div class="regla"><div class="ic">🔬</div><div class="tx"><b>I+D solo toca lo filtrado.</b> Su tiempo se gasta en lo que Dirección ya consideró que vale la pena.</div></div>
+  <div class="regla"><div class="ic">✍️</div><div class="tx"><b>Aprobar son dos firmas.</b> Una opinión no es una decisión; el margen y el potencial sobre la mesa, y firman I+D y Dirección.</div></div>
+  <div class="regla"><div class="ic">🔐</div><div class="tx"><b>El código antes que la muestra.</b> Sin artículo de Calidad no se fabrica nada — es lo que mantiene el maestro de artículos limpio.</div></div>
+  <div class="regla"><div class="ic">💬</div><div class="tx"><b>El rechazo con motivo es aprendizaje.</b> Leerlo afina la siguiente solicitud; discutirlo, se discute con datos.</div></div>
+
+  <div class="foot">
+    Dudas sobre el módulo: pregunta a tu jefe de equipo o a Dirección Comercial. · CRM Grupo Consolidado
+  </div>
+
+</div></div>
+</body>
+</html>
