@@ -163,8 +163,25 @@
     ((res.documents)||[]).map(fromFB).forEach(function(d){
       if(MANS[d.id])for(var k in d){if(d[k]!=null&&k!=="id")MANS[d.id][k]=d[k];}
     });
-    var el=document.getElementById("dyn"),h='<div class="sec">Todos los manuales · siempre al día</div>';
-    SEED.forEach(function(s){
+    // (v2.1) Rol recibido del portal → "para ti" primero, el resto después
+    var rol=(new URLSearchParams(location.search).get("rol")||"").toLowerCase();
+    function esParaMi(ap){
+      if(!rol)return true;
+      var a=(ap||"todos").toLowerCase();
+      if(a==="comerciales")return rol==="agente"||rol==="jefe";
+      if(a==="departamentos")return rol==="tipologia"||rol==="compras";
+      if(a==="dirección"||a==="direccion")return rol==="director"||rol==="ceo";
+      return true; // todos
+    }
+    var mios=SEED.filter(function(s){return esParaMi(MANS[s.id].aplica||s.aplica);});
+    var otros=SEED.filter(function(s){return mios.indexOf(s)<0;});
+    var orden=rol?mios.concat(otros):SEED;
+    var el=document.getElementById("dyn"),h='';
+    if(rol&&otros.length>0){h+='<div class="sec">📌 Para ti · '+mios.length+'</div>';}
+    else{h+='<div class="sec">Todos los manuales · siempre al día</div>';}
+    var otrosPintado=false;
+    orden.forEach(function(s){
+      if(rol&&!otrosPintado&&otros.indexOf(s)>=0){h+='<div class="sec">El resto de la casa</div>';otrosPintado=true;}
       var m=MANS[s.id];
       var interno=!!m.html;
       var badge=interno?("Interno · v"+(m.version||1)):(m.url?"Web":"En el CRM");
