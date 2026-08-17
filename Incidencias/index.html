@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Incidencias · Manuales CRM</title>
+<style>
+  :root{
+    --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,'SF Mono',Menlo,Monaco,'Courier New',monospace;
+    --tinta:#15181d; --papel:#eef1f4; --azul:#1f5fa8; --azul2:#2b7fd4;
+    --rojo:#c62f2f; --ambar:#c2660c; --verde:#2f7d52; --linea:#c9d2dc; --humo:#5f6a76;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{font-family:var(--sans);background:var(--tinta);color:var(--tinta);-webkit-font-smoothing:antialiased;min-height:100dvh}
+  .wrap{max-width:480px;margin:0 auto;background:var(--papel);min-height:100dvh;position:relative}
+  .wrap::before{content:"";position:fixed;inset:0;max-width:480px;margin:0 auto;pointer-events:none;z-index:0;background-image:radial-gradient(var(--linea) 0.5px,transparent 0.5px);background-size:15px 15px;opacity:.4}
+  .inner{position:relative;z-index:1;padding:26px 22px calc(30px + env(safe-area-inset-bottom))}
+
+  a.volver{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--azul);text-decoration:none;display:inline-block;margin-bottom:16px}
+
+  .head{border-bottom:1.5px solid var(--tinta);padding-bottom:18px;margin-bottom:8px}
+  .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;color:var(--rojo);text-transform:uppercase;margin-bottom:8px}
+  h1{font-weight:900;font-size:32px;line-height:1;letter-spacing:-.03em;text-transform:uppercase}
+  h1 em{font-style:normal;color:var(--rojo);display:block}
+  .sub{font-size:14px;line-height:1.5;color:#333a42;margin-top:12px}
+
+  /* SLA banner */
+  .sla{display:flex;gap:10px;margin:18px 0 8px}
+  .sla .b{flex:1;background:#fff;border:1.5px solid var(--tinta);border-radius:9px;padding:12px 10px;text-align:center;box-shadow:3px 3px 0 rgba(21,24,29,.08)}
+  .sla .n{font-weight:900;font-size:26px;letter-spacing:-.02em;line-height:1}
+  .sla .b:first-child .n{color:var(--ambar)} .sla .b:last-child .n{color:var(--rojo)}
+  .sla .t{font-family:var(--mono);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--humo);margin-top:5px;line-height:1.4}
+
+  .sec{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--humo);margin:26px 0 10px}
+
+  .paso{background:#fff;border:1.5px solid var(--tinta);border-radius:9px;padding:15px;margin-bottom:12px;box-shadow:3px 3px 0 rgba(21,24,29,.08)}
+  .pnum{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+  .pnum .n{flex:none;width:26px;height:26px;border-radius:7px;background:var(--tinta);color:#fff;display:grid;place-items:center;font-weight:900;font-size:13px}
+  .pnum .t{font-weight:800;font-size:15px;line-height:1.15}
+  .paso p{font-size:13px;line-height:1.55;color:#333a42}
+  .paso p+p{margin-top:8px}
+  .paso b{color:var(--tinta)}
+  .paso .ui{font-family:var(--mono);font-size:11px;background:#e8f1fb;border:1px solid #b8d3f0;border-radius:4px;padding:1px 6px;white-space:nowrap}
+  .paso .rojo{color:var(--rojo);font-weight:700}
+  .paso .verde{color:var(--verde);font-weight:700}
+  .paso .ambar{color:var(--ambar);font-weight:700}
+
+  .nota{border-left:3px solid var(--azul);background:#e8f1fb;border-radius:0 7px 7px 0;padding:10px 12px;font-size:12px;line-height:1.5;color:#25415e;margin-top:10px}
+  .alerta{border-left:3px solid var(--rojo);background:#fbeaea;border-radius:0 7px 7px 0;padding:10px 12px;font-size:12px;line-height:1.5;color:#6e2020;margin-top:10px}
+
+  /* árbol de departamentos */
+  .arbol{font-family:var(--mono);font-size:11.5px;line-height:1.9;background:#fff;border:1.5px dashed var(--linea);border-radius:8px;padding:12px 14px;margin-top:10px;color:#333a42}
+  .arbol b{color:var(--tinta)}
+  .arbol .rama{color:var(--humo)}
+
+  /* chips simulados */
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+  .chip{font-size:11px;padding:6px 11px;border-radius:99px;border:1.5px solid var(--linea);background:#fff;color:var(--humo);white-space:nowrap}
+  .chip.on{border-color:var(--verde);color:var(--verde);background:#eaf5ee;font-weight:700}
+  .chip.sub{border-style:dashed}
+
+  /* línea de tiempo SLA */
+  .tl{margin-top:12px}
+  .tl .fila{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px}
+  .tl .hora{flex:none;width:52px;font-family:var(--mono);font-size:10px;font-weight:700;padding-top:2px;text-align:right}
+  .tl .pip{flex:none;width:12px;height:12px;border-radius:50%;margin-top:2px;border:2.5px solid var(--tinta)}
+  .tl .txt{font-size:12.5px;line-height:1.45;color:#333a42}
+  .tl .txt b{color:var(--tinta)}
+
+  table{width:100%;border-collapse:collapse;margin-top:10px;font-size:12px}
+  th{font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--humo);text-align:left;padding:6px 8px;border-bottom:1.5px solid var(--tinta)}
+  td{padding:8px;border-bottom:1px solid var(--linea);vertical-align:top;line-height:1.45}
+  td:first-child{white-space:nowrap;font-weight:700}
+
+  .regla{display:flex;gap:10px;align-items:flex-start;background:#fff;border:1.5px solid var(--tinta);border-radius:9px;padding:12px 14px;margin-bottom:8px;box-shadow:3px 3px 0 rgba(21,24,29,.08)}
+  .regla .ic{flex:none;font-size:18px}
+  .regla .tx{font-size:12.5px;line-height:1.45;color:#333a42}
+  .regla .tx b{color:var(--tinta)}
+
+  .foot{margin-top:26px;padding-top:16px;border-top:1px dashed var(--linea);font-size:11px;color:var(--humo);line-height:1.5}
+</style>
+</head>
+<body>
+<div class="wrap"><div class="inner">
+
+  <a class="volver" href="../">‹ Volver a manuales</a>
+
+  <div class="head">
+    <div class="k">Manual · Módulo Incidencias</div>
+    <h1>Incidencias<em>responder y resolver</em></h1>
+    <div class="sub">Qué es una incidencia, cómo se crea bien, quién la recibe y los plazos que nos hemos comprometido a cumplir. Aplica a todos: comerciales, responsables y operarios.</div>
+  </div>
+
+  <div class="sla">
+    <div class="b"><div class="n">4 h</div><div class="t">para responder<br>al que la abrió</div></div>
+    <div class="b"><div class="n">24 h</div><div class="t">para resolverla<br>o dar plan y fecha</div></div>
+  </div>
+
+  <!-- ═══════════ QUÉ ES ═══════════ -->
+  <div class="sec">01 · Qué es (y qué no es)</div>
+
+  <div class="paso">
+    <div class="pnum"><div class="n">1</div><div class="t">Qué es una incidencia</div></div>
+    <p>Una incidencia es <b>cualquier cosa que ha salido mal y necesita que otro departamento actúe</b>: un pedido que llega tarde, un producto con defecto, una factura mal emitida, una máquina parada, un hilo mal puesto en 8.000 piezas.</p>
+    <p>No es una incidencia: una consulta, una idea de mejora o una tarea normal de trabajo. Para eso están las tareas y los proyectos.</p>
+    <div class="nota"><b>Por qué nos lo tomamos en serio:</b> cada incidencia bien registrada protege dos cosas — al <b>cliente</b> (que no sufra dos veces el mismo fallo) y a la <b>organización</b> (los fallos quedan escritos, medidos y asignados, no en llamadas que se olvidan). Una incidencia sin registrar es un problema que se repetirá.</div>
+  </div>
+
+  <div class="paso">
+    <div class="pnum"><div class="n">2</div><div class="t">Dos clases: de cliente e interna</div></div>
+    <p>Al crearla, lo primero que eliges es el origen con el conmutador <span class="ui">🤝 De cliente</span> / <span class="ui">🏢 Interna</span>:</p>
+    <table>
+      <tr><th></th><th>Qué es</th><th>Ejemplo</th></tr>
+      <tr><td>🤝 De cliente</td><td>Un cliente concreto ha sufrido o va a sufrir el fallo. <b>El cliente es obligatorio.</b></td><td>Entrega con el hilo mal a Salsicharia; retraso de pedido a Carns Damià.</td></tr>
+      <tr><td>🏢 Interna</td><td>El fallo es nuestro, de puertas adentro. Sin cliente.</td><td>Máquina de producción parada; error en el sistema; descuadre de almacén.</td></tr>
+    </table>
+    <div class="nota">Si un fallo interno acabará afectando a un cliente identificable (ej. la máquina parada retrasa SU pedido), créala <b>de cliente</b>: así queda ligada a su historial y protegemos la relación.</div>
+  </div>
+
+  <!-- ═══════════ DEPARTAMENTOS ═══════════ -->
+  <div class="sec">02 · A quién va: los departamentos</div>
+
+  <div class="paso">
+    <div class="pnum"><div class="n">3</div><div class="t">Cómo están organizados</div></div>
+    <p>Los tipos de incidencia <b>son los departamentos de la empresa</b>, organizados en árbol. Los departamentos con ramas se despliegan; puedes asignar al <b>área general</b> o afinar a una <b>rama concreta</b>:</p>
+    <div class="arbol">
+      ⚠️ <b>Calidad</b><br>
+      📦 <b>Stock (Compras)</b> <span class="rama">▸ 🚚 Logística</span><br>
+      ⚙️ <b>Operaciones</b> <span class="rama">▸ 🏭 Producción ▸ 🏢 Almacén · 🏭 Prod. Marruecos</span><br>
+      <span class="rama">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▸ 🧭 Coordinación</span><br>
+      🔬 <b>I+D</b> <span class="rama">▸ 🧂 Ingredientes · 🌯 Envolturas</span><br>
+      📄 <b>Administración</b> &nbsp;·&nbsp; 💻 <b>IT</b> &nbsp;·&nbsp; 🎧 <b>Customer Service</b>
+    </div>
+    <p style="margin-top:10px">El árbol es <b>vivo</b>: sale del organigrama que gestiona administración. Si mañana se crea un departamento nuevo, aparece aquí solo.</p>
+  </div>
+
+  <div class="paso">
+    <div class="pnum"><div class="n">4</div><div class="t">¿General o rama? La regla</div></div>
+    <div class="chips">
+      <span class="chip on">✓ ⚙️ Operaciones · general</span>
+      <span class="chip sub">🏭 Producción ▾</span>
+      <span class="chip sub">🧭 Coordinación</span>
+    </div>
+    <p style="margin-top:10px"><b>Si sabes exactamente de quién es, elige la rama</b> (Producción, Almacén...): llega directa a sus responsables y se resuelve antes.</p>
+    <p><b>Si no estás seguro, elige el área general</b> (Operaciones): la reciben los responsables del área y ellos la bajarán a la rama correcta. Es mejor un área general acertada que una rama equivocada.</p>
+    <p>Toca un chip con <b>▾</b> para desplegar sus ramas; tócalo otra vez (<b>▴</b>) para plegarlas.</p>
+  </div>
+
+  <div class="paso">
+    <div class="pnum"><div class="n">5</div><div class="t">Quién la ve y quién recibe email</div></div>
+    <p>Al crearla, automáticamente:</p>
+    <p>· <b>Los responsables del departamento elegido</b> reciben email al momento (todos, si hay varios).<br>
+    · <b>El responsable del área superior</b> recibe copia informativa — sabe que existe, sin ser el encargado.<br>
+    · En pantalla, cada responsable ve <b>su rama completa</b>: el de Operaciones ve también las de Producción y Coordinación; el de Producción, solo las suyas.</p>
+    <div class="nota">Los números junto a cada departamento en los filtros son <b>solo las pendientes</b> (abiertas + en proceso). Si tu contador no baja, tienes trabajo esperando.</div>
+  </div>
+
+  <!-- ═══════════ CREAR ═══════════ -->
+  <div class="sec">03 · Crear una incidencia bien</div>
+
+  <div class="paso">
+    <div class="pnum"><div class="n">6</div><div class="t">Los 60 segundos que ahorran días</div></div>
+    <p>Abre <span class="ui">🚨 Incidencias → + Nueva</span> y completa:</p>
+    <p>① <b>Origen</b>: de cliente o interna.<br>
+    ② <b>Cliente</b> (si es de cliente): búscalo y selecciónalo de la lista.<br>
+    ③ <b>Tipo</b>: el departamento — general o rama.<br>
+    ④ <b>Prioridad</b>: alta solo si hay cliente parado, entrega en riesgo o coste corriendo.<br>
+    ⑤ <b>Descripción</b>: qué pasó, desde cuándo, qué pieza/pedido/lote, y <b>qué necesitas que ocurra</b>.<br>
+    ⑥ <b>Fotos</b> si las hay — una foto resuelve más que tres párrafos.</p>
+    <div class="alerta"><b>Una descripción vaga obliga al otro departamento a gastar su plazo de 4 horas en preguntarte lo que ya sabías.</b> Escríbela pensando en que quien la lea pueda actuar sin llamarte.</div>
+  </div>
+
+  <!-- ═══════════ TRATARLA ═══════════ -->
+  <div class="sec">04 · Te llega una incidencia: el reloj corre</div>
+
+  <div class="paso">
+    <div class="pnum"><div class="n">7</div><div class="t">Responder en 4 horas</div></div>
+    <p>Desde que la incidencia entra en tu departamento, tienes <span class="ambar">4 horas laborales</span> para dar la <b>primera respuesta</b> al que la abrió. Responder no es resolver — es decir que la tienes, qué vas a hacer y cuándo:</p>
+    <div class="tl">
+      <div class="fila"><div class="hora">0 h</div><div class="pip" style="background:#c62f2f"></div><div class="txt"><b>Entra la incidencia.</b> Te llega el email y sube tu contador de pendientes.</div></div>
+      <div class="fila"><div class="hora">&lt; 4 h</div><div class="pip" style="background:#c2660c"></div><div class="txt"><b>Primera respuesta.</b> Ábrela, escribe en el hilo qué harás y pásala a <span class="ui">En proceso</span>. Si no es tuya, reasígnala YA (paso 9) — reasignar también cuenta como responder.</div></div>
+      <div class="fila"><div class="hora">&lt; 24 h</div><div class="pip" style="background:#2f7d52"></div><div class="txt"><b>Resuelta</b> — o, si es imposible en 24 h, un <b>plan escrito con fecha comprometida</b> en el hilo. El silencio nunca es una opción.</div></div>
+    </div>
+  </div>
+
+  <div class="paso">
+    <div class="pnum"><div class="n">8</div><div class="t">Resolver en 24 horas y cerrar bien</div></div>
+    <p>Al cerrarla, deja registrado: <b>qué se hizo</b>, la <b>causa raíz</b> (por qué pasó de verdad) y la <b>acción correctiva</b> (qué cambia para que no se repita). El que la abrió recibe aviso del cierre.</p>
+    <p>Cerrar sin causa raíz es taparla, no resolverla — y volverá.</p>
+    <div class="nota"><b>Recordatorios automáticos:</b> cada día que una incidencia siga abierta sin respuesta, el sistema reenvía email al responsable con los días acumulados. Los días en abierto quedan a la vista de todos, dirección incluida.</div>
+  </div>
+
+  <!-- ═══════════ REASIGNAR ═══════════ -->
+  <div class="sec">05 · No es tu departamento</div>
+
+  <div class="paso">
+    <div class="pnum"><div class="n">9</div><div class="t">Reasignar una incidencia</div></div>
+    <p>Si te llega algo que no es tuyo, no lo dejes morir en tu bandeja. Ábrela y toca <span class="ui">🔄 No es mi departamento — Reasignar</span>:</p>
+    <p>① Elige el <b>departamento correcto</b> en el mismo árbol desplegable (puedes bajar de un área a una de sus ramas, ej. de Producción a Prod. Marruecos).<br>
+    ② Escribe el <b>motivo</b> ("esto es de calidad, no de logística") — ayuda al siguiente y educa al que la creó.<br>
+    ③ Confirma. Los responsables del nuevo departamento reciben el aviso y <b>su reloj de 4 horas empieza</b>.</p>
+    <div class="alerta">Reasignar es gratis las primeras horas y carísimo el tercer día. Si dudas entre dos departamentos, reasigna al <b>área general</b> y que el responsable de área decida la rama.</div>
+  </div>
+
+  <!-- ═══════════ REGLAS ═══════════ -->
+  <div class="sec">06 · Las reglas de oro</div>
+
+  <div class="regla"><div class="ic">🎯</div><div class="tx"><b>El cliente primero.</b> Ante la duda de si algo "merece" incidencia: si un cliente lo ha notado o lo va a notar, la merece.</div></div>
+  <div class="regla"><div class="ic">⏱️</div><div class="tx"><b>4 h para responder, 24 h para resolver</b> o dar plan con fecha. El silencio es el único fallo imperdonable.</div></div>
+  <div class="regla"><div class="ic">✍️</div><div class="tx"><b>Todo por escrito, en el hilo.</b> Lo hablado por teléfono no existe para el sistema ni para el siguiente que la abra.</div></div>
+  <div class="regla"><div class="ic">🔄</div><div class="tx"><b>Si no es tuya, reasígnala hoy</b> — con motivo. Guardarla en tu bandeja penaliza a un cliente que no tiene la culpa.</div></div>
+  <div class="regla"><div class="ic">🔍</div><div class="tx"><b>Cerrar = causa raíz + acción correctiva.</b> Resolver el síntoma sin la causa es citarse con el mismo problema el mes que viene.</div></div>
+
+  <div class="foot">
+    Dudas sobre el módulo: pregunta a tu responsable de departamento. · CRM Grupo Consolidado
+  </div>
+
+</div></div>
+</body>
+</html>
