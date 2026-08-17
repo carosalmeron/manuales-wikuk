@@ -51,6 +51,8 @@
     <div class="sub">Guías rápidas de cada módulo. Toca una para abrirla — se lee en el móvil, paso a paso.</div>
   </div>
 
+  <div id="dyn" style="display:none"></div>
+  <div id="static">
   <div class="sec">Disponibles</div>
 
   <a class="card" href="./comercial/">
@@ -107,8 +109,78 @@
 
   <div style="border:1.5px dashed #c9d2dc;border-radius:9px;padding:14px;background:#fff;margin-bottom:12px">
     <p style="margin:0 0 4px;font-weight:800;font-size:14px">📱 Los demás manuales viven en el CRM</p>
-    <p style="margin:0;font-size:12px;line-height:1.5;color:#5f6a76">💼 Oportunidades · 🎯 Estrategias · 📦 Muestras · 💰 Ofertas · 🧾 Parte semanal · 📁 Proyectos · 🛠️ Administración — se leen dentro del CRM: <b>Inicio → 📖 Manuales de uso</b>. Los nuevos y cada actualización llegan con aviso, novedades y acuse de lectura.</p>
+    <p style="margin:0 0 10px;font-size:12px;line-height:1.5;color:#5f6a76">💼 Oportunidades · 🎯 Estrategias · 📦 Muestras · 💰 Ofertas · 🧾 Parte semanal · 📁 Proyectos · 🛠️ Administración — se leen dentro del CRM: <b>Inicio → 📖 Manuales de uso</b>. Los nuevos y cada actualización llegan con aviso, novedades y acuse de lectura.</p>
+    <a href="https://crmwikuk.vercel.app" style="display:block;text-align:center;background:#15181d;color:#fff;border-radius:8px;padding:12px;font-weight:800;font-size:13px;text-decoration:none">📱 Abrir el CRM →</a>
   </div>
+
+  </div>
+
+  <!-- Visor de manual interno -->
+  <div id="visor" style="display:none;position:fixed;inset:0;background:#15181d;z-index:99;flex-direction:column">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px">
+      <p id="visor-t" style="margin:0;font-size:13px;font-weight:800;color:#fff"></p>
+      <button onclick="cerrarVisor()" style="padding:8px 16px;border-radius:9px;border:none;background:#fff;font-weight:800;font-size:12px;cursor:pointer;font-family:inherit">✕ Cerrar</button>
+    </div>
+    <iframe id="visor-f" style="flex:1;border:none;width:100%;background:#fff" sandbox="allow-same-origin"></iframe>
+  </div>
+
+  <script>
+  // (v2) La portada lee el MISMO catálogo que publica el portal: siempre al día.
+  var FB="https://firestore.googleapis.com/v1/projects/grupo-consolidado-crm/databases/(default)/documents";
+  var SEED=[
+    {id:"comercial",titulo:"📊 Tus ventas y tus pedidos",desc:"Cómo van tus ventas, cuándo sale cada pedido y en qué clientes ganas o pierdes.",url:"./comercial/",aplica:"Comerciales"},
+    {id:"planificacion",titulo:"📋 Planificación de compras",desc:"Registrar una planificación en la visita y cómo la ve Compras.",url:"./planificacion/",aplica:"Comerciales"},
+    {id:"visitas",titulo:"👋 Visitas e instrucciones",desc:"Registrar visitas y el circuito de indicaciones de dirección.",url:"",aplica:"Comerciales"},
+    {id:"oportunidades",titulo:"💼 Oportunidades",desc:"Tu pipeline: seguimientos y cierre ganada/perdida.",url:"",aplica:"Comerciales"},
+    {id:"estrategias",titulo:"🎯 Estrategias",desc:"Precio con permiso: aprobación del descuento y seguimiento.",url:"",aplica:"Comerciales"},
+    {id:"muestras",titulo:"📦 Muestras",desc:"Del envío al resultado — y a proyecto industrial.",url:"",aplica:"Comerciales"},
+    {id:"ofertas",titulo:"💰 Ofertas",desc:"Crear, perseguir y cerrar — ganada o perdida con motivo.",url:"",aplica:"Comerciales"},
+    {id:"incidencias",titulo:"🚨 Incidencias",desc:"Cliente vs interna, el árbol de departamentos y los plazos 4 h / 24 h.",url:"./Incidencias/",aplica:"Todos"},
+    {id:"desarrollo",titulo:"🧪 Desarrollo de producto",desc:"El embudo: ficha, filtro, dictamen I+D, doble firma y código de Calidad.",url:"./desarrollo/",aplica:"Todos"},
+    {id:"parte",titulo:"🧾 Parte semanal y semáforo",desc:"Objetivos con hilo de avance, datos automáticos y la cascada de validación.",url:"",aplica:"Departamentos"},
+    {id:"proyectos",titulo:"📁 Proyectos e hitos",desc:"Backlog, hitos con dueño y los proyectos de desarrollo.",url:"",aplica:"Todos"},
+    {id:"stock",titulo:"📦 Stock en el catálogo",desc:"Total por producto y detalle por envase. Solo jefes.",url:"./index_stock.html",aplica:"Dirección"},
+    {id:"admin",titulo:"🛠️ Administración del sistema",desc:"Organigrama, usuarios y publicación de manuales.",url:"",aplica:"Dirección"}
+  ];
+  var MANS={};
+  function fromFB(d){
+    var o={id:(d.name||"").split("/").pop()};
+    var f=d.fields||{};
+    for(var k in f){var v=f[k];o[k]=v.stringValue!==undefined?v.stringValue:v.integerValue!==undefined?parseInt(v.integerValue):v.doubleValue!==undefined?v.doubleValue:v.booleanValue!==undefined?v.booleanValue:null;}
+    return o;
+  }
+  function abrirManual(id){
+    var m=MANS[id];if(!m)return;
+    if(m.html){
+      document.getElementById("visor-t").textContent=m.titulo+" · v"+(m.version||1);
+      document.getElementById("visor-f").srcdoc=m.html;
+      document.getElementById("visor").style.display="flex";
+    } else if(m.url){ location.href=m.url; }
+  }
+  function cerrarVisor(){document.getElementById("visor").style.display="none";document.getElementById("visor-f").srcdoc="";}
+  fetch(FB+"/manuales?pageSize=100").then(function(r){return r.ok?r.json():{};}).then(function(res){
+    SEED.forEach(function(m){MANS[m.id]=m;});
+    ((res.documents)||[]).map(fromFB).forEach(function(d){
+      if(MANS[d.id])for(var k in d){if(d[k]!=null&&k!=="id")MANS[d.id][k]=d[k];}
+    });
+    var el=document.getElementById("dyn"),h='<div class="sec">Todos los manuales · siempre al día</div>';
+    SEED.forEach(function(s){
+      var m=MANS[s.id];
+      var interno=!!m.html;
+      var badge=interno?("Interno · v"+(m.version||1)):(m.url?"Web":"En el CRM");
+      h+='<div class="card" onclick="abrirManual(\''+s.id+'\')" style="cursor:pointer">'
+        +'<div class="ic">'+m.titulo.split(" ")[0]+'</div>'
+        +'<div class="body"><div class="ct">'+m.titulo.replace(/^[^ ]+ /,"")+'</div>'
+        +'<div class="cx">'+(m.desc||"")+' <span style="color:#8a94a0">· '+s.aplica+'</span></div>'
+        +'<span class="badge">'+badge+'</span></div>'
+        +'<div class="go">›</div></div>';
+    });
+    h+='<p style="margin:10px 0 0;font-size:11px;line-height:1.5;color:#5f6a76">Aquí se leen; el <b>acuse de lectura</b> ("He leído y entendido") se firma dentro del CRM, donde también llegan los avisos de cada actualización.</p>';
+    el.innerHTML=h;
+    el.style.display="block";
+    document.getElementById("static").style.display="none";
+  }).catch(function(){/* sin conexión: se queda la versión estática */});
+  </script>
 
   <div class="foot">
     Los manuales se publican y actualizan desde el portal (Zona Admin → Config → 📖 Manuales). Esta página queda como acceso a los manuales clásicos.
